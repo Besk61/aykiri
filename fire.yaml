@@ -1,0 +1,84 @@
+version: "3"
+services:
+  yolo_img_fire:
+      image: besk61/yolo_remake:3.2
+      restart: always
+      network_mode: host
+      environment:
+        - IMAGE_QUEUE
+        - IMAGE_QUEUE_CROP
+        - CONFIDENCE
+        - RABBIT_ROUTING_KEY
+        - RTSP_ADRESSES
+        - MOTION_CONF
+        - MOTION_NUMBER
+        - DEVICE
+        - YOLO_MODEL
+        - WANT_BLUR
+        - BOYUT_X
+        - BOYUT_Y
+        - TZ=Europe/Istanbul
+      env_file: 
+        - fire.env
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                count: 1
+                capabilities: [gpu]
+  telegram_fire:
+      image: besk61/sender_remake:llm
+      restart: always
+      network_mode: host
+      environment:
+        - CONFIDENCE
+        - CLASS_CONF
+        - TELEGRAM_ID
+        - MODULE_NAME
+        - IMAGE_QUEUE
+        - IMAGE_QUEUE_CROP
+        - TEXT_MESSAGE
+        - SINIFLANDIRMA_ZAMANI
+        - SILME_ZAMANI
+        - COMPANY_NAME
+        - COMPANY_ID
+        - MODULE_ID
+        - TELEGRAM_BOT
+        - LOG_WANT
+        - TZ=Europe/Istanbul
+      env_file: 
+        - fire.env
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                count: 1
+                capabilities: [gpu]
+  slicer_fire:
+      image: besk61/cam_maker_remake:3.0
+      restart: always
+      network_mode: host
+      environment:
+        - RTSP_ADRESSES
+        - TIME_CAM
+        - CAM_STARTBOX
+        - CAM_ENDBOX
+        - RABBIT_OUTPUT_QUEUE
+        - RABBIT_ROUTING_KEY
+        - COMPANY_ID
+        - COMPANY_NAME
+        - IF_REGISTER
+        - MAC
+        - TELEGRAM_BOT
+        - LOG_WANT
+        - FRAME_COUNT
+        - TZ=Europe/Istanbul
+      env_file: 
+        - fire.env
+
+
+    
+    
+
